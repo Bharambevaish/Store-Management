@@ -1,0 +1,68 @@
+# Render Blueprint for the Tammewar Pharmacy API.
+#
+# This file declares the non-secret shape of the production service so it can
+# be reviewed here rather than only in the Render dashboard. Every value marked
+# `sync: false` is a secret or a deployment-specific value: Render prompts for
+# it once and stores it in the service's environment. Never write a secret,
+# connection string, or origin credential into this file.
+#
+# Phase 10 of PRODUCTION_DEPLOYMENT_TASKLIST.md covers applying this blueprint.
+
+services:
+  - type: web
+    name: tammewar-pharmacy-api
+    runtime: node
+    plan: free
+    region: singapore
+    rootDir: backend
+    # Production deploys come only from `main`. Pull-request previews are
+    # disabled so no preview build can reach production data.
+    branch: main
+    autoDeployTrigger: commit
+    previewsEnabled: false
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: "0.0.0.0"
+      # Render injects PORT; server.js refuses to start in production without it.
+      - key: JWT_ISSUER
+        value: tammewar-pharmacy
+      - key: JWT_AUDIENCE
+        value: tammewar-pharmacy-api
+      - key: JWT_EXPIRES_IN
+        value: 2h
+      - key: CUSTOMER_JWT_EXPIRES_IN
+        value: 2h
+      # Render terminates TLS at a single proxy hop in front of the service.
+      # Without this, express-rate-limit buckets every request under one
+      # address and the per-IP login limit stops discriminating.
+      - key: TRUST_PROXY
+        value: "1"
+      - key: AUTO_SEED
+        value: "false"
+      - key: PAYMENTS_ALLOW_MOCK
+        value: "false"
+      - key: ONLINE_RESTORE_ENABLED
+        value: "false"
+      - key: INTERNAL_AUTH_ENABLED
+        value: "false"
+      - key: WHATSAPP_ENABLED
+        value: "false"
+      # Atlas SRV string including the database path and
+      # retryWrites=true&w=majority. Set from the password manager only.
+      - key: MONGO_URI
+        sync: false
+      # Must equal the database named in MONGO_URI; startup verifies both.
+      - key: MONGO_DB_NAME
+        sync: false
+      # Generate with `cd backend && npm run secret:generate`. 64+ characters.
+      - key: JWT_SECRET
+        sync: false
+      # The exact Cloudflare Pages production origin, e.g.
+      # https://tammewar-pharmacy.pages.dev — no wildcards, no localhost.
+      - key: CORS_ORIGINS
+        sync: false

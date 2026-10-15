@@ -1,0 +1,44 @@
+{
+  "key": "result-analysis",
+  "moduleName": "Result Analysis",
+  "category": "Examination",
+  "version": "1.0.0",
+  "backend": {
+    "basePath": "/result-analysis",
+    "host": "127.0.0.1",
+    "port": 4009,
+    "healthPath": "/health"
+  },
+  "frontend": {
+    "remoteName": "result_analysis",
+    "remoteEntry": "/remotes/result-analysis/assets/remoteEntry.js",
+    "exposed": "./Module",
+    "routeBase": "/app/result-analysis",
+    "devPort": 3009,
+    "menu": {
+      "label": "Result Analysis",
+      "icon": "puzzle",
+      "order": 100
+    }
+  },
+  "permissions": [
+    {
+      "key": "result_analysis.view",
+      "label": "View Result Analysis"
+    },
+    {
+      "key": "result_analysis.create",
+      "label": "Create in Result Analysis"
+    },
+    {
+      "key": "result_analysis.update",
+      "label": "Edit in Result Analysis"
+    },
+    {
+      "key": "result_analysis.delete",
+      "label": "Delete in Result Analysis"
+    }
+  ],
+  "dependsOn": [],
+  "minPlan": "standard"
+}

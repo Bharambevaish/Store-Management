@@ -1,0 +1,36 @@
+# deps
+node_modules/
+.pnp/
+.pnp.js
+
+# build
+dist/
+dist-ssr/
+build/
+.vite/
+*.local
+
+# env & secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# misc
+.DS_Store
+coverage/
+.cache/
+tmp/
+.idea/
+.vscode/
+uploads/
+backups/sqlite/
